@@ -1,1 +1,19 @@
+- Prerequisite
+
+Create a VM, size/SKU doesn't matter, it's just to have an example for creating the alerts.
+
+---
+
+Go to your selected VM and click on Monitoring in the overview page, then Alerts.
+
+Click create then alert rule.
+
+Select the VM in the scope section.
+On the condition tab click on see all signals and select All Administrative operations and apply.
+Action tab -> select use action groups -> Click create action group. Fill in resource group, action group name, and a display name.
+Notification tab -> select Email/SMS message/Push/Voice in Notification type. Enter email then click Review + create and Create.
+
+
+
+
 
