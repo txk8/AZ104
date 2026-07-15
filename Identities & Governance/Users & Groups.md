@@ -26,6 +26,9 @@ Megatron is onboarding a new project team plus an external auditor. You need sta
 ## Task 1 — Create the users (Ada Lovelace & Grace Hopper)
  
 **Portal:** Microsoft Entra ID → **Users → New user → Create new user**. Set a UPN, name, and an initial password. On the **Properties** tab set **Department = Engineering** for *both* users (you'll target this with a dynamic group next). Give one a Job title too, e.g. *Network Engineer*.
+
+<img width="282" height="91" alt="image" src="https://github.com/user-attachments/assets/cd297400-02ff-4161-a4f5-aee7fb35524e" />
+
  
 **CLI:**
  
@@ -59,6 +62,10 @@ az ad user show --id "ada@$DOMAIN" --query "{name:displayName, dept:department, 
  
 1. **Assigned:** type *Security*, membership *Assigned*, name `project-enigma`, add Ada and Grace manually.
 2. **Dynamic:** New group again, **Membership type = Dynamic User**, add a rule: `user.department -eq "Engineering"`. Save and watch it auto-populate (can take a minute).
+
+<img width="293" height="293" alt="image" src="https://github.com/user-attachments/assets/44a0d192-58ba-4fae-b003-abba919b719e" />
+
+   
 > [!NOTE]
 > The dynamic-rule builder is **only** in the Entra admin center (or Azure portal), *not* the M365 admin center. You can also convert an existing assigned group: open it → **Properties → Membership type → Dynamic User → Add dynamic query**. Converting hands membership control to the rule — manual members who don't match get removed.
  
@@ -84,6 +91,11 @@ az ad group member add --group $GID --member-id $HID
 ## Task 3 — Invite an external (guest) user
  
 **Portal:** **Users → New user → Invite external user.** Enter an email you control, add a personal message, and optionally add them straight into `project-enigma`. Accept the invite from that mailbox to see the redemption flow and the `#EXT#` UPN that gets created.
+
+<img width="380" height="385" alt="image" src="https://github.com/user-attachments/assets/adae725a-e111-4880-9687-d218801115c7" />
+
+
+
  
 **CLI:**
  
@@ -103,11 +115,18 @@ az rest --method post --url "https://graph.microsoft.com/v1.0/invitations" --hea
 ## Task 5 — Turn on Self-Service Password Reset (SSPR)
  
 **Portal:** **Entra ID → Password reset → Properties.**
+
+<img width="550" height="424" alt="image" src="https://github.com/user-attachments/assets/1406cfee-c740-4815-b555-cb51c38d2226" />
+
  
 - Set **Self service password reset enabled** to *Selected* and choose `project-enigma`.
 - Under **Authentication methods**, require **2** methods.
 - Under **Registration**, require users to register at sign-in.
 - Test as a member at <https://aka.ms/sspr>.
+
+<img width="998" height="376" alt="image" src="https://github.com/user-attachments/assets/333d557f-8439-4112-8bab-99d27e18d151" />
+
+  
 > [!NOTE]
 > SSPR for **cloud** users is included; **password write-back** to on-prem AD needs **P1 + Entra Connect**. Don't confuse SSPR (users reset their own password) with an admin reset.
  
