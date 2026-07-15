@@ -19,11 +19,11 @@ Megatron is onboarding a new project team plus an external auditor. You need sta
 | Configure self-service password reset (SSPR) | Medium |
  
 > [!IMPORTANT]
-> Dynamic groups, group-based licensing, and SSPR write-back need **Entra ID P1**; Conditional Access / PIM / Identity Protection need **P2**. A pay-as-you-go tenant can start a free P1/P2 trial — activate it **from inside the tenant your users live in** (Microsoft 365 admin center → Billing → Purchase services), not via a fresh signup (that spins up a *separate* empty tenant).
+> Dynamic groups, group-based licensing, and SSPR write-back need **Entra ID P1**; Conditional Access / PIM / Identity Protection need **P2**. A pay-as-you-go tenant can start a free P1/P2 trial - activate it **from inside the tenant your users live in** (Microsoft 365 admin center → Billing → Purchase services), not via a fresh signup (that spins up a *separate* empty tenant).
  
 ---
  
-## Task 1 — Create the users (Ada Lovelace & Grace Hopper)
+## Task 1 - Create the users (Ada Lovelace & Grace Hopper)
  
 **Portal:** Microsoft Entra ID → **Users → New user → Create new user**. Set a UPN, name, and an initial password. On the **Properties** tab set **Department = Engineering** for *both* users (you'll target this with a dynamic group next). Give one a Job title too, e.g. *Network Engineer*.
 
@@ -33,13 +33,13 @@ Megatron is onboarding a new project team plus an external auditor. You need sta
 **CLI:**
  
 > [!WARNING]
-> `az ad user create` does **not** accept `--department` or `--job-title` — those aren't parameters of the command (you'll get `unrecognized arguments: --department`). Create the user first, then set those properties through Microsoft Graph with `az rest`. Commands below are single-line on purpose so they paste cleanly in **any** shell (Bash or PowerShell).
+> `az ad user create` does **not** accept `--department` or `--job-title` - those aren't parameters of the command (you'll get `unrecognized arguments: --department`). Create the user first, then set those properties through Microsoft Graph with `az rest`. Commands below are single-line on purpose so they paste cleanly in **any** shell (Bash or PowerShell).
  
 ```bash
 # Get your verified *.onmicrosoft.com (initial/default) domain
 DOMAIN=$(az rest --method get --url "https://graph.microsoft.com/v1.0/domains" --query "value[?isDefault].id" -o tsv)
  
-# Create the two users (no --department here — it isn't a valid flag)
+# Create the two users (no --department here - it isn't a valid flag)
 az ad user create --display-name "Ada Lovelace" --user-principal-name "ada@$DOMAIN" --password "Lab-Passw0rd!2026"
 az ad user create --display-name "Grace Hopper" --user-principal-name "grace@$DOMAIN" --password "Lab-Passw0rd!2026"
  
@@ -52,11 +52,11 @@ az ad user show --id "ada@$DOMAIN" --query "{name:displayName, dept:department, 
 ```
  
 > [!TIP]
-> `{something}` or `<something>` in Azure docs/commands is a fill-in-the-blank placeholder — replace the whole token **including the brackets** with your value. A subscription ID is `/subscriptions/xxxx-...`, never `/subscriptions/{xxxx-...}`.
+> `{something}` or `<something>` in Azure docs/commands is a fill-in-the-blank placeholder - replace the whole token **including the brackets** with your value. A subscription ID is `/subscriptions/xxxx-...`, never `/subscriptions/{xxxx-...}`.
  
 ---
  
-## Task 2 — Create an assigned group and a dynamic group
+## Task 2 - Create an assigned group and a dynamic group
  
 **Portal:** **Groups → New group.**
  
@@ -67,7 +67,7 @@ az ad user show --id "ada@$DOMAIN" --query "{name:displayName, dept:department, 
 
    
 > [!NOTE]
-> The dynamic-rule builder is **only** in the Entra admin center (or Azure portal), *not* the M365 admin center. You can also convert an existing assigned group: open it → **Properties → Membership type → Dynamic User → Add dynamic query**. Converting hands membership control to the rule — manual members who don't match get removed.
+> The dynamic-rule builder is **only** in the Entra admin center (or Azure portal), *not* the M365 admin center. You can also convert an existing assigned group: open it → **Properties → Membership type → Dynamic User → Add dynamic query**. Converting hands membership control to the rule - manual members who don't match get removed.
  
 **CLI:**
  
@@ -88,7 +88,7 @@ az ad group member add --group $GID --member-id $HID
  
 ---
  
-## Task 3 — Invite an external (guest) user
+## Task 3 - Invite an external (guest) user
  
 **Portal:** **Users → New user → Invite external user.** Enter an email you control, add a personal message, and optionally add them straight into `project-enigma`. Accept the invite from that mailbox to see the redemption flow and the `#EXT#` UPN that gets created.
 
@@ -106,13 +106,16 @@ az rest --method post --url "https://graph.microsoft.com/v1.0/invitations" --hea
  
 ---
  
-## Task 4 — Manage licences
+## Task 4 - Manage licences
  
-**Portal:** **Entra ID → Billing → Licenses → All products.** If you have any (e.g. from a trial), select a product → **Assign** → pick a user or group. Practise **group-based licensing** by assigning to `project-enigma` and confirming members inherit it.
+**Portal:** **Entra Portal (entra.microsoft.com) → Billing → Licenses → All products.** If you have any (e.g. from a trial), select a product → **Assign** → pick a user or group. Practise **group-based licensing** by assigning to `project-enigma` and confirming members inherit it.
+
+<img width="1102" height="325" alt="image" src="https://github.com/user-attachments/assets/9036fca8-29b9-4632-90c2-a5a52e46e4b3" />
+
  
 ---
  
-## Task 5 — Turn on Self-Service Password Reset (SSPR)
+## Task 5 - Turn on Self-Service Password Reset (SSPR)
  
 **Portal:** **Entra ID → Password reset → Properties.**
 
@@ -134,29 +137,29 @@ az rest --method post --url "https://graph.microsoft.com/v1.0/invitations" --hea
  
 ## Success criteria
  
-- [ ] Two cloud users exist — **Ada Lovelace** and **Grace Hopper** — both with Department = Engineering
+- [ ] Two cloud users exist - **Ada Lovelace** and **Grace Hopper** - both with Department = Engineering
 - [ ] An **assigned** security group and a **dynamic** group both exist; the dynamic group auto-contains Ada and Grace
 - [ ] A guest (`#EXT#`) user appears in the directory after invite redemption
 - [ ] SSPR is enabled for a selected group with 2 required methods
 ---
  
-## Break & fix — try before you peek
+## Break & fix - try before you peek
  
 **Dynamic group is empty.** You set the rule to `user.department -eq "engineering"` (lowercase) but the users have `Engineering`. Dynamic rule *values* are case-sensitive. Fix the rule or the property, then wait for re-evaluation.
  
 **`unrecognized arguments: --department`.** `az ad user create` has no `--department` flag. Create the user, then set department via `az rest` PATCH to `.../users/<upn>` (see Task 1). Same applies to `jobTitle`.
  
-**Can't add the guest to a Microsoft 365 group.** Guest access can be blocked by an external collaboration setting — check **Entra ID → External Identities → External collaboration settings**.
+**Can't add the guest to a Microsoft 365 group.** Guest access can be blocked by an external collaboration setting - check **Entra ID → External Identities → External collaboration settings**.
  
 ---
  
 ## Knowledge check
  
 <details>
-<summary><b>Assigned vs dynamic group membership — when does each make sense?</b></summary>
-**Assigned:** you add/remove members manually — predictable, no licence requirement, good for small/static teams.
+<summary><b>Assigned vs dynamic group membership - when does each make sense?</b></summary>
+**Assigned:** you add/remove members manually - predictable, no licence requirement, good for small/static teams.
  
-**Dynamic:** membership is computed from a rule over user (or device) attributes — self-maintaining as people join/move/leave, but requires **Entra ID P1** and the attributes must be populated accurately. You cannot manually add a member to a dynamic group.
+**Dynamic:** membership is computed from a rule over user (or device) attributes - self-maintaining as people join/move/leave, but requires **Entra ID P1** and the attributes must be populated accurately. You cannot manually add a member to a dynamic group.
 </details>
 <details>
 <summary><b>What's the difference between SSPR and password write-back?</b></summary>
@@ -166,7 +169,7 @@ az rest --method post --url "https://graph.microsoft.com/v1.0/invitations" --hea
 </details>
 <details>
 <summary><b>Why did the department not set on <code>az ad user create</code>?</b></summary>
-Because `az ad user` only exposes a handful of properties (name, UPN, password, mail-nickname, account-enabled). Department and job title aren't among them, so you set them through the underlying Microsoft Graph API with `az rest --method PATCH`. Running `az ad user create --help` shows the exact accepted arguments — the fastest way to catch this yourself.
+Because `az ad user` only exposes a handful of properties (name, UPN, password, mail-nickname, account-enabled). Department and job title aren't among them, so you set them through the underlying Microsoft Graph API with `az rest --method PATCH`. Running `az ad user create --help` shows the exact accepted arguments - the fastest way to catch this yourself.
 </details>
 ---
  
