@@ -46,6 +46,9 @@ So `project-enigma` ends up **Reader everywhere** (from the MG) and **Contributo
 ## Task 1 - Prep: a management group
  
 **Portal:** **Management groups → Create** → `mg-megatron`. Then move your subscription under it (**mg-megatron → Subscriptions → Add**).
+
+<img width="1034" height="140" alt="image" src="https://github.com/user-attachments/assets/9cc4d5fe-7be3-4d81-82c2-6a6e7eb034cc" />
+
  
 **CLI:**
  
@@ -60,6 +63,9 @@ az account management-group subscription add --name mg-megatron --subscription "
 ## Task 2 - Assign a built-in role at management-group scope
  
 **Portal:** **mg-megatron → Access control (IAM) → Add → Add role assignment** → role **Reader** → assign to **project-enigma**. Note the **Scope** shown on the assignment - it's the whole management group.
+
+<img width="463" height="178" alt="image" src="https://github.com/user-attachments/assets/9d503861-6a28-4f4b-827d-c375183df8fd" />
+
  
 **CLI:**
  
@@ -88,14 +94,16 @@ az role assignment create --assignee-object-id "$GID" --assignee-principal-type 
 ```
  
 Now the group is **Reader everywhere** (inherited from the MG) *and* **Contributor on this one RG** (direct). On `rg-rbac-lab` the two stack, so it effectively has Contributor.
- 
+
+ <img width="584" height="267" alt="image" src="https://github.com/user-attachments/assets/9d20debe-692a-4fda-b61f-f4bed9fa9134" />
+
 ---
  
 ## Task 4 - Author and assign a custom role
  
 **Portal:** **Subscription → IAM → Add → Add custom role → Start from JSON**, upload the file below, then assign the new role at `rg-rbac-lab`.
  
-Save this as `vm-operator.json` (replace the subscription ID - get it with `az account show --query id -o tsv`):
+Save this as `vm-operator.json` (replace the subscription ID - get it from the portal or with `az account show --query id -o tsv`):
  
 ```json
 {
@@ -118,7 +126,10 @@ Save this as `vm-operator.json` (replace the subscription ID - get it with `az a
 az role definition create --role-definition vm-operator.json
 az role assignment create --assignee-object-id "$GID" --assignee-principal-type Group --role "VM Operator (restart only)" --scope "$(az group show -n rg-rbac-lab --query id -o tsv)"
 ```
+
  
+ <img width="537" height="168" alt="image" src="https://github.com/user-attachments/assets/4cade142-19fd-40fb-94c0-fd164776faf9" />
+
 > [!NOTE]
 > `AssignableScopes` sets **where the role can be assigned**, not who gets it - and can't be broader than your own authority.
  
@@ -127,6 +138,8 @@ az role assignment create --assignee-object-id "$GID" --assignee-principal-type 
 ## Task 5 - Interpret the access
  
 **Portal:** **IAM → Role assignments** and **IAM → Check access**. Pick `project-enigma` and read off each row: which **role**, what **scope**, and whether it's **inherited** (shown against the MG) or **assigned here** (shown against the RG). **View my access** shows effective permissions for the signed-in user.
+
+
  
 **CLI:**
  
