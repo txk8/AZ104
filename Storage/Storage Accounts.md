@@ -1,1 +1,4 @@
-
+-Create a storage account
+-Access Keys
+-Create container
+-Test revoking SAS key
