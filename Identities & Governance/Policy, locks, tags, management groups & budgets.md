@@ -1,4 +1,4 @@
-# Lab 3 - Governance: Policy, locks, tags & budgets
+# Lab 3 -  Policy, locks, tags & budgets
 
 > **Domain:** Manage Azure identities & governance (20–25%) · **Time:** ~50–60 min · **Cost:** Free (governance); a £20 budget alert costs nothing
 >
@@ -24,9 +24,9 @@ Megatron's finance team wants guardrails in place before any workloads are intro
 
 ---
 
-## Task 1 — Assign policy at management-group scope
+## Task 1 - Assign policy at management-group scope
 
-You already have `mg-megatron` (Lab 2). Assigning policy there means it cascades to every subscription beneath it — and from there any resource groups in those subscriptions, and then again for all the resources contained within those resource groups.
+You already have `mg-megatron` (Lab 2). Assigning policy there means it cascades to every subscription beneath it - and from there any resource groups in those subscriptions, and then again for all the resources contained within those resource groups.
 
 **Portal:** **Management groups → mg-megatron → Governance / Policy → Assignments.** You'll assign the policies below at this scope (or at subscription scope if you'd rather keep it contained).
 
@@ -39,7 +39,7 @@ MG="/providers/Microsoft.Management/managementGroups/mg-megatron"
 
 ---
 
-## Task 2 — Assign a built-in policy: allowed locations
+## Task 2 - Assign a built-in policy: allowed locations
 
 **Portal:** **Policy → Assignments → Assign policy.** Scope = your subscription (or `mg-megatron`). Definition = **Allowed locations**. Parameter = **UK South**. Effect = **Deny**. Then try to create a resource group in another region and watch it get blocked.
 
@@ -62,7 +62,7 @@ az group create -n rg-should-fail -l northeurope
 
 ---
 
-## Task 3 — Enforce and inherit tags with Policy
+## Task 3 - Enforce and inherit tags with Policy
 
 Two built-in tag policies: one **requires** a tag on new resource groups, the other **inherits** that tag down to the resources inside them.
 
@@ -82,7 +82,7 @@ az tag update --resource-id "$(az group show -n rg-prod-app --query id -o tsv)" 
 
 ---
 
-## Task 4 — Protect a resource group with a lock
+## Task 4 - Protect a resource group with a lock
 
 **Portal:** **rg-prod-app → Locks → Add** → a **CanNotDelete** lock named `no-delete`. Try to delete the RG and watch it fail. Switch it to **ReadOnly** to see it also block changes.
 
@@ -124,7 +124,7 @@ az consumption budget list -o table
 
 ## Break & fix - try before you peek
 
-**Inherit-tag policy isn't tagging existing resources.** Modify only acts going forward — run a **remediation task** and check its managed identity has the right role.
+**Inherit-tag policy isn't tagging existing resources.** Modify only acts going forward - run a **remediation task** and check its managed identity has the right role.
 
 **Can't delete an RG even after removing the lock.** Look for a lock inherited from the **subscription** or a parent scope, or a Policy **Deny** on delete.
 
@@ -135,15 +135,15 @@ az consumption budget list -o table
 ## Knowledge check
 
 <details>
-<summary><b>Policy vs RBAC — what's the difference?</b></summary>
+<summary><b>Policy vs RBAC - what's the difference?</b></summary>
 
-**RBAC** controls *who can do what*. **Azure Policy** controls *what the resources are allowed to be* (regions, SKUs, required tags, enforced settings) — no matter who creates them. You usually need both.
+**RBAC** controls *who can do what*. **Azure Policy** controls *what the resources are allowed to be* (regions, SKUs, required tags, enforced settings) - no matter who creates them. You usually need both.
 </details>
 
 <details>
 <summary><b>Which policy effects need a managed identity and remediation?</b></summary>
 
-**Modify** and **DeployIfNotExists** — because they change or deploy things on your behalf. **Audit** and **Deny** don't; they only report or block.
+**Modify** and **DeployIfNotExists** - because they change or deploy things on your behalf. **Audit** and **Deny** don't; they only report or block.
 </details>
 
 ---
