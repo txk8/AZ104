@@ -4,7 +4,8 @@
 >
 > Part of my AZ-104 hands-on lab guide. Portal-first, with Azure CLI for speed and teardown. Builds on the storage account from Lab 4 (or make a fresh one below).
 
-![Meet Mr Blobby, our test blob for this lab] <img width="1038" height="500" alt="image" src="https://github.com/user-attachments/assets/906c6050-daed-488d-8b0c-911707747c9c" />
+Meet Mr Blobby, our test blob for this lab 
+<img width="1038" height="500" alt="image" src="https://github.com/user-attachments/assets/906c6050-daed-488d-8b0c-911707747c9c" />
 
 
 *Meet Mr Blobby - the star blob for this lab. (The real Blobby belongs to the BBC.)*
