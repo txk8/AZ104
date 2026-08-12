@@ -38,7 +38,6 @@ az group create -n $RG -l $LOC
 az vm create -g $RG -n vm-app1 --image Ubuntu2204 --size Standard_D2als_v6 --zone 1 --admin-username azureuser --generate-ssh-keys
 ```
 
-
 ---
 
 
@@ -56,6 +55,7 @@ az vm deallocate -g $RG -n vm-app1
 az disk update -g $RG -n data-disk1 --size-gb 64
 az vm start -g $RG -n vm-app1
 ```
+<img width="278" height="86" alt="image" src="https://github.com/user-attachments/assets/196d55ee-05e6-4fdb-96fb-dd81fe1696bc" />
 
 ---
 
@@ -71,12 +71,16 @@ az vm deallocate -g $RG -n vm-app1
 az vm resize -g $RG -n vm-app1 --size Standard_D4als_v6
 az vm start -g $RG -n vm-app1
 ```
+<img width="807" height="229" alt="image" src="https://github.com/user-attachments/assets/4608e179-4291-4c75-a096-4b8a9e458142" />
 
 ---
 
 ## Task 4 - Enable encryption at host
 
-**Portal:** **VM → Disks → Encryption at host.** This encrypts the data on the VM host (temp disk + disk caches) on top of the default platform encryption. The feature must be registered on the subscription once.
+**Portal:** **VM → Disks → Additional settings → Encryption at host.** This encrypts the data on the VM host (temp disk + disk caches) on top of the default platform encryption. The feature must be registered on the subscription once.
+
+
+<img width="249" height="95" alt="image" src="https://github.com/user-attachments/assets/7be101a8-71ac-4f26-b394-19e3270b7d4d" />
 
 **CLI:**
 
